@@ -1,0 +1,6 @@
+langchain==0.0.352
+openai
+streamlit
+huggingface_hub
+wikipedia
+python-dotenv
