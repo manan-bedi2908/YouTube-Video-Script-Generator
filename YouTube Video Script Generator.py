@@ -30,11 +30,8 @@ title_template = PromptTemplate(
 
 script_template = PromptTemplate(
     input_variables = ['title', 'wikipedia_research'],
-    template = 'Write me a YouTube Script based on the Title {title} while leveraging this Wikipedia Research {wikipedia_research}'
+    template = 'Write me a YouTube Script based on the Title {title} in 1000 words. while leveraging this Wikipedia Research {wikipedia_research}'
 )
-
-# memory = ConversationBufferMemory(input_key = 'topic',
-#                                   memory_key= 'chat_history')
 
 title_memory = ConversationBufferMemory(input_key = 'topic',
                                         memory_key = 'chat_history')
@@ -42,8 +39,6 @@ title_memory = ConversationBufferMemory(input_key = 'topic',
 script_memory = ConversationBufferMemory(input_key = 'title',
                                         memory_key = 'chat_history')
 
-
-# llm = OpenAI(temperature = 0.6)
 
 title_chain = LLMChain(llm = llm, 
                        prompt = title_template,
@@ -57,17 +52,9 @@ script_chain = LLMChain(llm=llm,
                         memory = script_memory,
                         verbose = True)
 
-# sequential_chain = SequentialChain(chains = [title_chain, script_chain],
-#                                    input_variables=['topic'],
-#                                    output_variables=['title', 'script'],
-#                                    verbose = True)
-
 wiki = WikipediaAPIWrapper()
 
 if prompt:
-    # response = sequential_chain({'topic': prompt})
-    # st.write(response['title'])
-    # st.write(response['script'])
     data_load_state = st.text('Loading...')
     title = title_chain.run(prompt)
     wiki_research = wiki.run(prompt)
@@ -76,12 +63,3 @@ if prompt:
     st.write(title)
     st.write(script)
     data_load_state = st.text('Title and Script Generated Successfully...')
-
-    with st.expander('Title History'):
-        st.info(title_memory.buffer)
-
-    with st.expander('Script History'):
-        st.info(script_memory.buffer)
-
-    with st.expander('Wikipedia Research'):
-        st.info(wiki_research)
